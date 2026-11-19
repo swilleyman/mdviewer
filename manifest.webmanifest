@@ -1,0 +1,35 @@
+{
+  "id": "./",
+  "name": "MD Viewer",
+  "short_name": "MD Viewer",
+  "description": "A fast, offline Markdown viewer and editor.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ],
+  "share_target": {
+    "action": "./share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        { "name": "file", "accept": ["text/*", "application/octet-stream", ".md", ".markdown", ".txt"] }
+      ]
+    }
+  },
+  "file_handlers": [
+    { "action": "./", "accept": { "text/markdown": [".md", ".markdown", ".mdown", ".mkd"] } }
+  ]
+}

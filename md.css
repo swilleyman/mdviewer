@@ -1,0 +1,100 @@
+/* Color tokens + rendered-Markdown styles. Also embedded in "Export HTML". */
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f6f7f9;
+  --bg-raised: #ffffff;
+  --fg: #1f2328;
+  --fg-muted: #5b6470;
+  --border: #d8dee4;
+  --accent: #4f46e5;
+  --accent-soft: #eef0ff;
+  --accent-fg: #ffffff;
+  --code-bg: #f2f4f7;
+  --link: #4338ca;
+  --mark: #fff1a8;
+  --shadow: 0 10px 30px rgba(15, 20, 30, .14);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1115; --bg-soft: #151920; --bg-raised: #1a1f27; --fg: #e5e8ec; --fg-muted: #9aa4b0;
+    --border: #2a313b; --accent: #8a84ff; --accent-soft: #23234a; --accent-fg: #0f1115;
+    --code-bg: #1a1f28; --link: #a5a0ff; --mark: #5a4d12; --shadow: 0 10px 30px rgba(0, 0, 0, .5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1115; --bg-soft: #151920; --bg-raised: #1a1f27; --fg: #e5e8ec; --fg-muted: #9aa4b0;
+  --border: #2a313b; --accent: #8a84ff; --accent-soft: #23234a; --accent-fg: #0f1115;
+  --code-bg: #1a1f28; --link: #a5a0ff; --mark: #5a4d12; --shadow: 0 10px 30px rgba(0, 0, 0, .5);
+  color-scheme: dark;
+}
+
+.md {
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+  box-sizing: border-box;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 28px 16px 72px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: calc(16px * var(--md-scale, 1));
+  line-height: 1.68;
+  color: var(--fg);
+  overflow-wrap: break-word;
+}
+@media (min-width: 700px) { .md { padding: 40px 32px 96px; } }
+
+.md > :first-child { margin-top: 0; }
+.md h1, .md h2, .md h3, .md h4, .md h5, .md h6 {
+  line-height: 1.25; margin: 1.6em 0 .6em; font-weight: 650; scroll-margin-top: 16px;
+}
+.md h1 { font-size: 2em; padding-bottom: .3em; border-bottom: 1px solid var(--border); }
+.md h2 { font-size: 1.5em; padding-bottom: .3em; border-bottom: 1px solid var(--border); }
+.md h3 { font-size: 1.25em; }
+.md h4 { font-size: 1.05em; }
+.md h5, .md h6 { font-size: .95em; color: var(--fg-muted); }
+.md p, .md ul, .md ol, .md blockquote, .md pre, .md table, .md details, .md dl { margin: 0 0 1em; }
+.md a { color: var(--link); text-underline-offset: 2px; }
+.md strong { font-weight: 650; }
+.md mark { background: var(--mark); color: inherit; padding: 0 .15em; border-radius: 3px; }
+.md hr { border: 0; height: 1px; background: var(--border); margin: 2em 0; }
+.md img, .md video { max-width: 100%; height: auto; border-radius: 6px; }
+.md ul, .md ol { padding-left: 1.6em; }
+.md li + li { margin-top: .25em; }
+.md li > ul, .md li > ol { margin: .25em 0 0; }
+.md li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.4em; }
+.md input[type="checkbox"] { width: 1em; height: 1em; margin: 0 .45em 0 0; vertical-align: -.12em; accent-color: var(--accent); }
+.md blockquote {
+  padding: .1em 1em; color: var(--fg-muted); border-left: 4px solid var(--accent); background: var(--bg-soft);
+  border-radius: 0 6px 6px 0;
+}
+.md blockquote > :last-child { margin-bottom: .6em; }
+.md blockquote > :first-child { margin-top: .6em; }
+.md code, .md kbd, .md pre { font-family: var(--mono); font-size: .88em; }
+.md :not(pre) > code { background: var(--code-bg); padding: .15em .4em; border-radius: 5px; }
+.md kbd {
+  padding: .1em .45em; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 5px; background: var(--bg-soft);
+}
+.md pre {
+  position: relative; background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px 16px; overflow-x: auto; line-height: 1.5; -webkit-overflow-scrolling: touch;
+}
+.md pre code { background: none !important; padding: 0 !important; font-size: 1em; }
+.md table {
+  display: block; width: max-content; max-width: 100%; overflow-x: auto; border-collapse: collapse;
+  font-size: .94em; -webkit-overflow-scrolling: touch;
+}
+.md th, .md td { border: 1px solid var(--border); padding: 7px 12px; text-align: left; vertical-align: top; }
+.md th { background: var(--bg-soft); font-weight: 650; }
+.md tr:nth-child(2n) td { background: color-mix(in srgb, var(--bg-soft) 55%, transparent); }
+.md details { border: 1px solid var(--border); border-radius: 8px; padding: .5em .9em; }
+.md details > summary { cursor: pointer; font-weight: 600; }
+.md details[open] > summary { margin-bottom: .5em; }
+.md details.frontmatter { font-size: .9em; color: var(--fg-muted); }
+.md details.frontmatter pre { margin: 0; }
+.md dt { font-weight: 650; }
+.md dd { margin: 0 0 .5em 1.2em; }
+.md .footnotes { font-size: .9em; color: var(--fg-muted); border-top: 1px solid var(--border); margin-top: 2em; }
+
+/* highlight.js themes ship their own background; let ours show through */
+.md .hljs { background: transparent; }

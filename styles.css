@@ -1,0 +1,160 @@
+/* App shell. Color tokens live in md.css. */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+}
+button { font: inherit; color: inherit; }
+svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+svg .fill { fill: currentColor; stroke: none; }
+
+/* Top bar */
+.bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px max(10px, env(safe-area-inset-right)) 6px max(10px, env(safe-area-inset-left));
+  padding-top: max(6px, env(safe-area-inset-top));
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  flex-shrink: 0;
+}
+.brand { display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1; }
+.brand img { flex-shrink: 0; border-radius: 6px; }
+.doc-name { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dirty { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.icon-btn {
+  display: inline-grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 10px;
+  background: transparent; cursor: pointer; color: var(--fg-muted);
+}
+.icon-btn:hover { background: var(--bg-soft); color: var(--fg); }
+.icon-btn:focus-visible, .seg button:focus-visible, .menu button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.seg { display: inline-flex; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 2px; margin: 0 4px; }
+.seg button {
+  border: 0; background: transparent; padding: 6px 12px; border-radius: 8px; font-size: 14px; cursor: pointer;
+  color: var(--fg-muted); min-height: 32px;
+}
+.seg button[aria-pressed="true"] { background: var(--bg-raised); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); font-weight: 600; }
+.wide-only { display: none; }
+@media (min-width: 900px) { .wide-only { display: inline-block; } }
+@media (max-width: 420px) {
+  .brand img { display: none; }
+  .seg button { padding: 6px 10px; }
+  .icon-btn { width: 36px; }
+}
+
+/* Panes */
+.main { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr; }
+.main[data-mode="split"] { grid-template-columns: 1fr 1fr; }
+.main[data-mode="view"] .editor-pane, .main[data-mode="edit"] .preview-pane { display: none; }
+.pane { min-height: 0; min-width: 0; overflow: auto; overscroll-behavior: contain; }
+.preview-pane { scroll-behavior: smooth; }
+.editor-pane { overflow: hidden; background: var(--bg-soft); }
+.main[data-mode="split"] .editor-pane { border-right: 1px solid var(--border); }
+#editor {
+  display: block; width: 100%; height: 100%; margin: 0; border: 0; outline: none; resize: none;
+  padding: 20px max(16px, env(safe-area-inset-right)) 80px max(16px, env(safe-area-inset-left));
+  background: transparent; color: var(--fg); caret-color: var(--accent);
+  font-family: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+  font-size: calc(15px * var(--md-scale, 1)); line-height: 1.6; tab-size: 2;
+}
+.main[data-mode="edit"] #editor { max-width: 860px; margin: 0 auto; }
+
+/* Status */
+.status {
+  display: flex; justify-content: space-between; gap: 12px; flex-shrink: 0;
+  padding: 4px max(12px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  border-top: 1px solid var(--border); font-size: 12px; color: var(--fg-muted); background: var(--bg);
+}
+
+/* Menu */
+.menu {
+  position: fixed; z-index: 30; top: calc(52px + env(safe-area-inset-top)); right: max(8px, env(safe-area-inset-right));
+  min-width: 220px; padding: 6px; background: var(--bg-raised); border: 1px solid var(--border);
+  border-radius: 12px; box-shadow: var(--shadow); display: flex; flex-direction: column;
+}
+.menu[hidden] { display: none; }
+.menu > button {
+  text-align: left; border: 0; background: none; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px;
+}
+.menu > button:hover { background: var(--bg-soft); }
+.menu hr { border: 0; height: 1px; background: var(--border); margin: 4px 6px; }
+.menu-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 4px 12px; font-size: 14px; }
+.stepper { display: inline-flex; gap: 4px; }
+.stepper button {
+  border: 1px solid var(--border); background: var(--bg-soft); border-radius: 8px; width: 40px; height: 34px; cursor: pointer;
+}
+
+/* Outline drawer */
+.toc {
+  position: fixed; z-index: 25; top: 0; right: 0; bottom: 0; width: min(320px, 86vw);
+  background: var(--bg-raised); border-left: 1px solid var(--border); box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+  padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+}
+.toc[hidden] { display: none; }
+.toc-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 16px; border-bottom: 1px solid var(--border); }
+#tocList { overflow: auto; padding: 8px; }
+#tocList a {
+  display: block; padding: 7px 10px; border-radius: 8px; color: var(--fg); text-decoration: none; font-size: 14px; line-height: 1.35;
+}
+#tocList a:hover { background: var(--bg-soft); }
+#tocList a[data-level="2"] { padding-left: 22px; }
+#tocList a[data-level="3"] { padding-left: 34px; color: var(--fg-muted); }
+#tocList a[data-level="4"] { padding-left: 46px; color: var(--fg-muted); font-size: 13px; }
+#tocList .empty { color: var(--fg-muted); padding: 10px; font-size: 14px; }
+
+/* Code copy button */
+.copy-btn {
+  position: absolute; top: 6px; right: 6px; border: 1px solid var(--border); background: var(--bg-raised);
+  color: var(--fg-muted); font: 12px system-ui, sans-serif; padding: 4px 8px; border-radius: 6px; cursor: pointer;
+  opacity: 0; transition: opacity .15s;
+}
+.md pre:hover .copy-btn, .copy-btn:focus-visible { opacity: 1; }
+@media (hover: none) { .copy-btn { opacity: .85; } }
+
+/* Drop overlay, toast, dialog */
+.drop {
+  position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; pointer-events: none;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.drop[hidden] { display: none; }
+.drop > div {
+  padding: 22px 28px; border: 2px dashed var(--accent); border-radius: 14px; background: var(--bg-raised);
+  font-weight: 600; box-shadow: var(--shadow);
+}
+.toast {
+  position: fixed; z-index: 50; left: 50%; bottom: calc(40px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px);
+  background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px;
+  opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; max-width: calc(100vw - 32px);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+dialog {
+  border: 1px solid var(--border); border-radius: 14px; padding: 20px; width: min(480px, calc(100vw - 32px));
+  background: var(--bg-raised); color: var(--fg); box-shadow: var(--shadow);
+}
+dialog::backdrop { background: rgba(0, 0, 0, .35); }
+dialog .hint { color: var(--fg-muted); font-size: 13px; margin: 6px 0 12px; }
+dialog input {
+  width: 100%; padding: 10px 12px; font-size: 16px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--fg);
+}
+dialog input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.btn { border: 1px solid var(--border); background: var(--bg-soft); padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); font-weight: 600; }
+
+@media print {
+  body { display: block; height: auto; overflow: visible; background: #fff; }
+  .bar, .status, .editor-pane, .toc, .menu, .toast, .drop, .copy-btn { display: none !important; }
+  .main, .main[data-mode] { display: block; }
+  .main .preview-pane { display: block !important; overflow: visible; }
+  .md { max-width: none; padding: 0; }
+}
